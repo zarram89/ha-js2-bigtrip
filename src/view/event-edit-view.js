@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
 function createEventEditTemplate(point) {
-  const {type, destination, basePrice, dateFrom, dateTo} = point;
+  const {type, destination, basePrice} = point;
 
   return `
     <li class="trip-events__item">

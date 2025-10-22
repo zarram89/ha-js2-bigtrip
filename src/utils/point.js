@@ -38,6 +38,4 @@ const getDuration = (start, end) => {
   return `${String(minutes).padStart(2, '0')}M`;
 };
 
-
-
 export { formatFullDate, formatTime, formatTripDate, getDuration};
