@@ -1,6 +1,6 @@
 import {OFFER_TYPES, generateOffersByType} from './offer.js';
 import {generateDestination} from './destination.js';
-import {getRandomArrayElement, getRandomInteger} from '../utils.js';
+import {getRandomArrayElement, getRandomInteger} from '../utils/common.js';
 
 function generatePoint(id) {
   const type = getRandomArrayElement(OFFER_TYPES);
