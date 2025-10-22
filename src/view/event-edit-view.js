@@ -1,53 +1,68 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
-function createEventEditTemplate() {
+function createEventEditTemplate(point) {
+  const {type, destination, basePrice, dateFrom, dateTo} = point;
+
   return `
-      <li class="trip-events__item">
-        <form class="event event--edit" action="#" method="post">
-          <header class="event__header">
-            <div class="event__type-wrapper">
-              <label class="event__type  event__type-btn" for="event-type-toggle-1">
-                <span class="visually-hidden">Choose event type</span>
-                <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
-              </label>
-            </div>
+    <li class="trip-events__item">
+      <form class="event event--edit" action="#" method="post">
+        <header class="event__header">
+          <div class="event__type-wrapper">
+            <label class="event__type event__type-btn">
+              <img class="event__type-icon" width="17" height="17"
+                   src="img/icons/${type}.png" alt="Event type icon">
+            </label>
+          </div>
 
-            <div class="event__field-group  event__field-group--destination">
-              <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Amsterdam">
-            </div>
+          <div class="event__field-group event__field-group--destination">
+            <input class="event__input event__input--destination"
+                   type="text" name="event-destination"
+                   value="${destination.name}">
+          </div>
 
-            <div class="event__field-group  event__field-group--time">
-              <input class="event__input  event__input--time" type="text" value="18/03/19 10:00 — 18/03/19 11:00" name="event-time">
-            </div>
+          <div class="event__field-group event__field-group--price">
+            <input class="event__input event__input--price"
+                   type="number" name="event-price" value="${basePrice}">
+          </div>
 
-            <div class="event__field-group  event__field-group--price">
-              <input class="event__input  event__input--price" type="text" name="event-price" value="20">
-            </div>
-
-            <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-            <button class="event__reset-btn" type="reset">Delete</button>
-            <button class="event__rollup-btn" type="button">
-              <span class="visually-hidden">Close event</span>
-            </button>
-          </header>
-        </form>
-      </li>
-    `;
+          <button class="event__save-btn btn btn--blue" type="submit">Save</button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Close event</span>
+          </button>
+        </header>
+      </form>
+    </li>
+  `;
 }
 
-export default class EventEditView {
-  getTemplate() {
-    return createEventEditTemplate();
+export default class EventEditView extends AbstractView {
+  #point = null;
+  #handleFormSubmit = null;
+  #handleCloseClick = null;
+
+  constructor({point, onFormSubmit, onCloseClick}) {
+    super();
+    this.#point = point;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleCloseClick = onCloseClick;
+
+    this.element.querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#closeClickHandler);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
+  get template() {
+    return createEventEditTemplate(this.#point);
   }
 
-  removeElement() {
-    this.element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
+
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleCloseClick();
+  };
 }

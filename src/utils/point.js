@@ -38,14 +38,6 @@ const getDuration = (start, end) => {
   return `${String(minutes).padStart(2, '0')}M`;
 };
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
 
-function getRandomInteger(a, b) {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-}
 
-export {getRandomArrayElement, getRandomInteger, formatFullDate, formatTime, formatTripDate, getDuration};
+export { formatFullDate, formatTime, formatTripDate, getDuration};
