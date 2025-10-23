@@ -50,8 +50,7 @@ const createDestinationSection = (destination) => {
             ${destination.pictures.map((p) => `<img class="event__photo" src="${p.src}" alt="${p.description}">`).join('')}
           </div>
         </div>`
-    : ''
-  }
+    : ''}
     </section>
   `;
 };
@@ -88,7 +87,7 @@ const createTypeSelector = (type) => `
 // Основной шаблон
 // ---------------------------
 function createEventEditTemplate(data) {
-  const { type, destination, basePrice, offers, dateFrom, dateTo } = data;
+  const {type, destination, basePrice, offers, dateFrom, dateTo} = data;
 
   return `
     <li class="trip-events__item">
@@ -148,7 +147,7 @@ export default class EventEditView extends AbstractStatefulView {
   #dateFromPicker = null;
   #dateToPicker = null;
 
-  constructor({ point, destinations, offers, onFormSubmit, onCloseClick }) {
+  constructor({point, destinations, offers, onFormSubmit, onCloseClick}) {
     super();
     this._state = EventEditView.parsePointToState(point);
     this.#destinations = destinations;
@@ -213,24 +212,28 @@ export default class EventEditView extends AbstractStatefulView {
   }
 
   #dateFromChangeHandler = ([userDate]) => {
-    this.updateElement({ dateFrom: userDate });
+    this.updateElement({dateFrom: userDate});
   };
 
   #dateToChangeHandler = ([userDate]) => {
-    this.updateElement({ dateTo: userDate });
+    this.updateElement({dateTo: userDate});
   };
 
   #destinationChangeHandler = (evt) => {
     const name = evt.target.value;
     const newDestination = this.#destinations.find((d) => d.name === name);
-    if (!newDestination) return;
-    this.updateElement({ destination: newDestination });
+    if (!newDestination) {
+      return
+    }
+    this.updateElement({destination: newDestination});
   };
 
   // 👇 Новый обработчик смены типа маршрута
   #typeChangeHandler = (evt) => {
     const newType = evt.target.dataset.type;
-    if (!newType || newType === this._state.type) return;
+    if (!newType || newType === this._state.type) {
+      return
+    }
 
     // При смене типа — обновляем тип и офферы для этого типа
     this.updateElement({
@@ -250,10 +253,10 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   static parsePointToState(point) {
-    return { ...point };
+    return {...point};
   }
 
   static parseStateToPoint(state) {
-    return { ...state };
+    return {...state};
   }
 }
