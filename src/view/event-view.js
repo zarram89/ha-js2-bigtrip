@@ -1,3 +1,4 @@
+// event-view.js
 import AbstractView from '../framework/view/abstract-view.js';
 import {formatTripDate, formatTime, getDuration} from '../utils/point.js';
 
@@ -5,33 +6,28 @@ function createEventTemplate(point) {
   const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = point;
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
-  const startTime = formatTime(dateFrom);
-  const endTime = formatTime(dateTo);
-  const duration = getDuration(dateFrom, dateTo);
-  const eventDate = formatTripDate(dateFrom);
-
   return `
     <li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${dateFrom}">${eventDate}</time>
+        <time class="event__date">${formatTripDate(dateFrom)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${dateFrom}">${startTime}</time>
+            <time class="event__start-time">${formatTime(dateFrom)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${dateTo}">${endTime}</time>
+            <time class="event__end-time">${formatTime(dateTo)}</time>
           </p>
-          <p class="event__duration">${duration}</p>
+          <p class="event__duration">${getDuration(dateFrom, dateTo)}</p>
         </div>
         <p class="event__price">&euro;&nbsp;<span class="event__price-value">${basePrice}</span></p>
         <ul class="event__selected-offers">
-          ${offers.map((offer) => `
+          ${offers.map((o) => `
             <li class="event__offer">
-              <span class="event__offer-title">${offer.title}</span>
-              &plus;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+              <span class="event__offer-title">${o.title}</span>
+              &plus;&euro;&nbsp;<span class="event__offer-price">${o.price}</span>
             </li>`).join('')}
         </ul>
         <button class="event__favorite-btn ${favoriteClassName}" type="button">
@@ -53,14 +49,18 @@ function createEventTemplate(point) {
 export default class EventView extends AbstractView {
   #point = null;
   #handleEditClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({point, onEditClick}) {
+  constructor({point, onEditClick, onFavoriteClick}) {
     super();
     this.#point = point;
     this.#handleEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__favorite-btn')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
@@ -70,5 +70,10 @@ export default class EventView extends AbstractView {
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleEditClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }
