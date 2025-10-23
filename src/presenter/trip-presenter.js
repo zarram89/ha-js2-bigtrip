@@ -1,4 +1,4 @@
-// trip-presenter.js
+// src/presenter/trip-presenter.js
 import {render, remove, RenderPosition} from '../framework/render.js';
 import TripInfoView from '../view/trip-info-view.js';
 import FiltersView from '../view/filters-view.js';
@@ -8,6 +8,7 @@ import PointPresenter from './point-presenter.js';
 import {FilterType, SortType} from '../const.js';
 import {buildFilters} from '../utils/filter.js';
 import {sortPoints} from '../utils/sort.js';
+import {DESTINATIONS, OFFERS_BY_TYPE} from '../mock/point.js'; // 👈 добавляем
 
 export default class TripPresenter {
   #tripMainContainer = null;
@@ -17,7 +18,6 @@ export default class TripPresenter {
   #pointPresenters = new Map();
 
   #currentFilterType = FilterType.EVERYTHING;
-
   #currentSortType = SortType.DAY;
   #sortComponent = null;
 
@@ -30,12 +30,10 @@ export default class TripPresenter {
 
   init() {
     const points = this.#getSortedPoints();
-
     const filters = buildFilters(points, FilterType.EVERYTHING);
 
     render(new TripInfoView({points}), this.#tripMainContainer, RenderPosition.AFTERBEGIN);
     render(new FiltersView({filters}), this.#filtersContainer);
-
     this.#renderSort();
     this.#renderPoints(points);
   }
@@ -67,7 +65,9 @@ export default class TripPresenter {
       const pointPresenter = new PointPresenter({
         container: eventsList,
         onDataChange: this.#handlePointChange,
-        onModeChange: this.#handleModeChange
+        onModeChange: this.#handleModeChange,
+        destinations: DESTINATIONS,
+        offers: OFFERS_BY_TYPE
       });
       pointPresenter.init(point);
       this.#pointPresenters.set(point.id, pointPresenter);

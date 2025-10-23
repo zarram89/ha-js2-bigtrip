@@ -6,19 +6,21 @@ import EventEditView from '../view/event-edit-view.js';
 export default class PointPresenter {
   #container = null;
   #point = null;
-
   #pointComponent = null;
   #pointEditComponent = null;
-
   #handleDataChange = null;
   #handleModeChange = null;
+  #mode = 'DEFAULT';
 
-  #mode = 'DEFAULT'; // 'DEFAULT' | 'EDITING'
+  #destinations = null;
+  #offers = null;
 
-  constructor({container, onDataChange, onModeChange}) {
+  constructor({container, onDataChange, onModeChange, destinations, offers}) {
     this.#container = container;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
   init(point) {
@@ -35,6 +37,8 @@ export default class PointPresenter {
 
     this.#pointEditComponent = new EventEditView({
       point: this.#point,
+      destinations: this.#destinations,
+      offers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
       onCloseClick: this.#handleCloseClick
     });
@@ -70,7 +74,7 @@ export default class PointPresenter {
   #replacePointToForm() {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#handleModeChange(); // 👉 уведомляем TripPresenter
+    this.#handleModeChange();
     this.#mode = 'EDITING';
   }
 
@@ -91,7 +95,8 @@ export default class PointPresenter {
     this.#replacePointToForm();
   };
 
-  #handleFormSubmit = () => {
+  #handleFormSubmit = (updatedPoint) => {
+    this.#handleDataChange(updatedPoint);
     this.#replaceFormToPoint();
   };
 
