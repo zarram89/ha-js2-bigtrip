@@ -1,3 +1,4 @@
+// destination.js
 import {getRandomArrayElement, getRandomInteger} from '../utils/common.js';
 
 const DESTINATION_NAMES = [
@@ -19,7 +20,7 @@ const DESCRIPTIONS = [
 
 function generatePictures() {
   return Array.from({ length: getRandomInteger(1, 5) }, () => ({
-    src: `https://loremflickr.com/248/152?random=${getRandomInteger(1, 1000)}`,
+    src: `http://picsum.photos/300/200?r=${getRandomInteger(1, 100)}`,
     description: getRandomArrayElement(DESCRIPTIONS),
   }));
 }
